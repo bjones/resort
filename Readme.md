@@ -11,12 +11,12 @@ This is a fork of resort, named resort-bjones, which adds ActiveRecord 3.1 suppo
 
 ##Install
 
-    $ gem install resort
+    $ gem install resort-bjones
 
 Or in your Gemfile:
 
 ```ruby
-gem 'resort'
+gem 'resort-bjones'
 ```
 
 ##Rationale
