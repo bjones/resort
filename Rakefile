@@ -1,9 +1,35 @@
+require 'rubygems'
 require 'bundler'
-Bundler::GemHelper.install_tasks
+begin
+  Bundler.setup(:default, :development)
+rescue Bundler::BundlerError => e
+  $stderr.puts e.message
+  $stderr.puts "Run `bundle install` to install missing gems"
+  exit e.status_code
+end
+require 'rake'
 
+version = File.exist?('VERSION') ? File.read('VERSION') : ""
+
+require 'jeweler'
+Jeweler::Tasks.new do |gem|
+  gem.name = "resort-bjones"
+  gem.version = version
+  gem.homepage = "http://github.com/bjones/resort"
+  gem.license = "MIT"
+  gem.summary = %Q{Positionless model sorting for Rails 3.}
+  gem.description = %Q{Positionless model sorting for Rails 3.}
+  gem.email = "cbj@gnu.org"
+  gem.authors = ["Oriol Gual", "Josep M. Bach", "Josep Jaume Rey", "Brian Jones"]
+end
+Jeweler::RubygemsDotOrgTasks.new
+
+require 'rspec/core'
 require 'rspec/core/rake_task'
-desc "Run resort specs"
-RSpec::Core::RakeTask.new
+RSpec::Core::RakeTask.new(:spec) do |spec|
+end
+
+task :default => :spec
 
 require 'yard'
 YARD::Rake::YardocTask.new(:docs) do |t|
@@ -11,37 +37,10 @@ YARD::Rake::YardocTask.new(:docs) do |t|
   t.options = ['-m', 'markdown', '--no-private', '-r', 'Readme.md', '--title', 'Resort documentation']
 end
 
-site = 'doc'
-source_branch = 'master'
-deploy_branch = 'gh-pages'
-
-desc "generate and deploy documentation website to github pages"
-multitask :pages do
-  puts ">>> Deploying #{deploy_branch} branch to Github Pages <<<"
-  require 'git'
-  repo = Git.open('.')
-  puts "\n>>> Checking out #{deploy_branch} branch <<<\n"
-  repo.branch("#{deploy_branch}").checkout
-  (Dir["*"] - [site]).each { |f| rm_rf(f) }
-  Dir["#{site}/*"].each {|f| mv(f, "./")}
-  rm_rf(site)
-  puts "\n>>> Moving generated site files <<<\n"
-  Dir["**/*"].each {|f| repo.add(f) }
-  repo.status.deleted.each {|f, s| repo.remove(f)}
-  puts "\n>>> Commiting: Site updated at #{Time.now.utc} <<<\n"
-  message = ENV["MESSAGE"] || "Site updated at #{Time.now.utc}"
-  repo.commit(message)
-  puts "\n>>> Pushing generated site to #{deploy_branch} branch <<<\n"
-  repo.push
-  puts "\n>>> Github Pages deploy complete <<<\n"
-  repo.branch("#{source_branch}").checkout
-end
-
-task :doc => [:docs]
+task :doc => :docs
 
 desc "Generate and open class diagram (needs Graphviz installed)"
 task :graph do |t|
  `bundle exec yard graph -d --full --no-private | dot -Tpng -o graph.png && open graph.png`
 end
 
-task :default => [:spec]

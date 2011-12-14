@@ -1,6 +1,13 @@
 #resort
 
-Resort provides sorting capabilities to your Rails 3 models.
+Resort provides sorting capabilities to your Rails 3 models.  
+
+##Versions
+
+This is a fork of resort, named resort-bjones, which adds ActiveRecord 3.1 support.
+
+* resort-bjones 0.3.0 should work with ActiveRecord 3.0 and ActiveRecord 3.1
+* resort 0.2.3 works with ActiveRecord 3.0 only
 
 ##Install
 
