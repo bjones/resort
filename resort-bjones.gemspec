@@ -37,7 +37,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/bjones/resort"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.11"
+  s.rubygems_version = "1.8.10"
   s.summary = "Positionless model sorting for Rails 3."
 
   if s.respond_to? :specification_version then
